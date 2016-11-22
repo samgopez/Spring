@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/addUser", method = {RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<Message> addUser(@ModelAttribute User user) {
+    public ResponseEntity<Message> addUser(@Valid @ModelAttribute User user) {
         logger.debug("Start addUser() for /addUser");
         Message message = userService.addUser(user);
 
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
-    public ResponseEntity<Message> updateUser(@ModelAttribute User user) {
+    public ResponseEntity<Message> updateUser(@Valid @ModelAttribute User user) {
         logger.debug("Start updateUser() for /updateUser");
         Message message = userService.updateUser(user);
 
@@ -44,7 +45,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/deleteUser/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Message> deleteUser(@PathVariable("id") int id) {
+    public ResponseEntity<Message> deleteUser(@Valid @PathVariable("id") int id) {
         logger.debug("Start deleteUser() for /deleteUser");
         Message message = userService.deleteUser(id);
 
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/viewUser/{id}", method = RequestMethod.POST)
-    public ResponseEntity<User> viewUser(@PathVariable("id") int id) {
+    public ResponseEntity<User> viewUser(@Valid @PathVariable("id") int id) {
         logger.debug("Start viewUser() for /viewUser");
         User user = userService.getUserById(id);
 
