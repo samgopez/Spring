@@ -4,6 +4,7 @@ import com.spring.model.Message;
 import com.spring.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -119,31 +120,40 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(int userId) {
         logger.debug("Start getUserById()");
-        String sql = "SELECT "
-                   +     "* "
-                   + "FROM "
-                   +     "user "
-                   + "INNER JOIN "
-                   +     "user_info "
-                   +         "ON user.user_id = user_info.user_id "
-                   + "WHERE "
-                   +     "user.user_id=? "
-                   +     "AND user.user_is_delete='1'";
+        User user = new User();
+        try {
+            String sql = "SELECT "
+                    +     "* "
+                    + "FROM "
+                    +     "user "
+                    + "INNER JOIN "
+                    +     "user_info "
+                    +         "ON user.user_id = user_info.user_id "
+                    + "WHERE "
+                    +     "user.user_id=? "
+                    +     "AND user.user_is_delete='1'";
 
-        return jdbcTemplate.queryForObject(sql, new Object[]{userId}, new RowMapper<User>() {
+            user = jdbcTemplate.queryForObject(sql, new Object[]{userId}, new RowMapper<User>() {
 
-            @Override
-            public User mapRow(ResultSet resultSet, int i) throws SQLException {
-                User user = new User();
-                user.setId(resultSet.getInt("user_id"));
-                user.setUserName(resultSet.getString("user_name"));
-                user.setFullName(resultSet.getString("info_fullname"));
-                user.setAge(resultSet.getInt("info_age"));
-                user.setAddress(resultSet.getString("info_address"));
+                @Override
+                public User mapRow(ResultSet resultSet, int i) throws SQLException {
+                    User user = new User();
+                    user.setId(resultSet.getInt("user_id"));
+                    user.setUserName(resultSet.getString("user_name"));
+                    user.setFullName(resultSet.getString("info_fullname"));
+                    user.setAge(resultSet.getInt("info_age"));
+                    user.setAddress(resultSet.getString("info_address"));
 
-                return user;
-            }
-        });
+                    return user;
+                }
+            });
+
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            logger.error("No result Found", e);
+            return user;
+        }
+
     }
 
     @Override

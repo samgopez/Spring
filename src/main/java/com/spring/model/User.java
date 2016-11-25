@@ -1,23 +1,21 @@
 package com.spring.model;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Created by Sam on 19/11/2016.
  */
+
 public class User {
 
-    @NotNull
     private int id;
-    @NotNull
     private String userName;
-    @NotNull
+    @JsonIgnore
     private String passWord;
-    @NotNull
     private String fullName;
-    @NotNull
     private int age;
-    @NotNull
     private String address;
 
 
